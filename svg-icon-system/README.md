@@ -13,12 +13,19 @@ While this approach of inlining SVGs is definitely not something new, people hav
 
 
 # Usage
-To use this module, you'll have to import it in your theme/website as follows:
+To use this module, you'll have to download it first.
 ```sh
 # Optional. Do this if you haven't already done this.
 hugo mod init "<your website/theme repo>"
 
 hugo mod get github.com/UtkarshVerma/hugo-modules/svg-icon-system
+```
+
+Once done, add the module to your theme/website's `config.yaml`.
+```yaml
+module:
+  imports:
+    - path: github.com/UtkarshVerma/hugo-modules/svg-icon-system
 ```
 
 Once that's done, you can go ahead and insert SVGs anywhere in your website using the `svg` partial as shown.
