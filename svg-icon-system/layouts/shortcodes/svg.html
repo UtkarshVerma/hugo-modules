@@ -1,0 +1,5 @@
+{{ if .IsNamedParams }}
+    {{ partial "svg" (dict "icon" (.Get "icon") "title" (.Get "title")) }}
+{{ else }}
+    {{ partial "svg" (.Get 0) }}
+{{ end }}

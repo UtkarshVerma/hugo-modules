@@ -1,0 +1,18 @@
+module:
+  mounts:
+    - source: assets/scss/foundation/_vendor
+      target: assets/scss/foundation/vendor
+  imports:
+    - path: github.com/foundation/foundation-sites
+      mounts:
+        - source: scss
+          target: assets/scss/foundation
+        - source: js
+          target: assets/foundation-sites
+        - source: _vendor
+          target: assets/scss
+
+    - path: github.com/ten1seven/what-input
+      mounts:
+        - source: dist/what-input.js
+          target: assets/what-input/index.js
