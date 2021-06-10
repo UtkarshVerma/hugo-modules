@@ -2,3 +2,5 @@ github.com/twbs/bootstrap v4.6.0+incompatible h1:gHX/lyS+3sUtHS6AKI365MfWukJ9N/M
 github.com/twbs/bootstrap v4.6.0+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
 github.com/twbs/bootstrap v5.0.0-beta2+incompatible h1:PB8w9yrXsh1bA9MqrTpskdde458NVChGl1LW6UmG0nU=
 github.com/twbs/bootstrap v5.0.0-beta2+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
+github.com/twbs/bootstrap v5.0.1+incompatible h1:XW1ZMrcg2ZTTQFKtE/i5HUagYsAao/hqfN30dJeBpVk=
+github.com/twbs/bootstrap v5.0.1+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
