@@ -4,6 +4,7 @@ module:
       target: assets/scss/bootstrap/vendor
   imports:
     - path: github.com/twbs/bootstrap
+      ignoreConfig: true
       mounts:
         - source: scss
           target: assets/scss/bootstrap
