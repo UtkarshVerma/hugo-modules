@@ -7,12 +7,21 @@ import type {
   Rect,
   Window,
 } from '../types';
-import { type BasePlacement, top, left, right, bottom } from '../enums';
+import {
+  type BasePlacement,
+  type Variation,
+  top,
+  left,
+  right,
+  bottom,
+  end,
+} from '../enums';
 import getOffsetParent from '../dom-utils/getOffsetParent';
 import getWindow from '../dom-utils/getWindow';
 import getDocumentElement from '../dom-utils/getDocumentElement';
 import getComputedStyle from '../dom-utils/getComputedStyle';
 import getBasePlacement from '../utils/getBasePlacement';
+import getVariation from '../utils/getVariation';
 import { round } from '../utils/math';
 
 // eslint-disable-next-line import/no-unused-modules
@@ -51,6 +60,7 @@ export function mapToStyles({
   popper,
   popperRect,
   placement,
+  variation,
   offsets,
   position,
   gpuAcceleration,
@@ -60,6 +70,7 @@ export function mapToStyles({
   popper: HTMLElement,
   popperRect: Rect,
   placement: BasePlacement,
+  variation: ?Variation,
   offsets: $Shape<{ x: number, y: number, centerOffset: number }>,
   position: PositioningStrategy,
   gpuAcceleration: boolean,
@@ -89,7 +100,10 @@ export function mapToStyles({
     if (offsetParent === getWindow(popper)) {
       offsetParent = getDocumentElement(popper);
 
-      if (getComputedStyle(offsetParent).position !== 'static') {
+      if (
+        getComputedStyle(offsetParent).position !== 'static' &&
+        position === 'absolute'
+      ) {
         heightProp = 'scrollHeight';
         widthProp = 'scrollWidth';
       }
@@ -98,14 +112,20 @@ export function mapToStyles({
     // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
     offsetParent = (offsetParent: Element);
 
-    if (placement === top) {
+    if (
+      placement === top ||
+      ((placement === left || placement === right) && variation === end)
+    ) {
       sideY = bottom;
       // $FlowFixMe[prop-missing]
       y -= offsetParent[heightProp] - popperRect.height;
       y *= gpuAcceleration ? 1 : -1;
     }
 
-    if (placement === left) {
+    if (
+      placement === left ||
+      ((placement === top || placement === bottom) && variation === end)
+    ) {
       sideX = right;
       // $FlowFixMe[prop-missing]
       x -= offsetParent[widthProp] - popperRect.width;
@@ -127,7 +147,7 @@ export function mapToStyles({
       // blurry text on low PPI displays, so we want to use 2D transforms
       // instead
       transform:
-        (win.devicePixelRatio || 1) < 2
+        (win.devicePixelRatio || 1) <= 1
           ? `translate(${x}px, ${y}px)`
           : `translate3d(${x}px, ${y}px, 0)`,
     };
@@ -178,6 +198,7 @@ function computeStyles({ state, options }: ModifierArguments<Options>) {
 
   const commonStyles = {
     placement: getBasePlacement(state.placement),
+    variation: getVariation(state.placement),
     popper: state.elements.popper,
     popperRect: state.rects.popper,
     gpuAcceleration,

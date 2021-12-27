@@ -100,12 +100,13 @@ export declare type State = {
     };
     reset: boolean;
 };
+declare type SetAction<S> = S | ((prev: S) => S);
 export declare type Instance = {
     state: State;
     destroy: () => void;
     forceUpdate: () => void;
     update: () => Promise<Partial<State>>;
-    setOptions: (options: Partial<OptionsGeneric<any>>) => Promise<Partial<State>>;
+    setOptions: (setOptionsAction: SetAction<Partial<OptionsGeneric<any>>>) => Promise<Partial<State>>;
 };
 export declare type ModifierArguments<Options extends Obj> = {
     state: State;

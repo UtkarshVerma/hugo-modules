@@ -1,6 +1,6 @@
-import getBoundingClientRect from "../dom-utils/getBoundingClientRect.js";
 import getClippingRect from "../dom-utils/getClippingRect.js";
 import getDocumentElement from "../dom-utils/getDocumentElement.js";
+import getBoundingClientRect from "../dom-utils/getBoundingClientRect.js";
 import computeOffsets from "./computeOffsets.js";
 import rectToClientRect from "./rectToClientRect.js";
 import { clippingParents, reference, popper, bottom, top, right, basePlacements, viewport } from "../enums.js";
@@ -28,11 +28,10 @@ export default function detectOverflow(state, options) {
       padding = _options$padding === void 0 ? 0 : _options$padding;
   var paddingObject = mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
   var altContext = elementContext === popper ? reference : popper;
-  var referenceElement = state.elements.reference;
   var popperRect = state.rects.popper;
   var element = state.elements[altBoundary ? altContext : elementContext];
   var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
-  var referenceClientRect = getBoundingClientRect(referenceElement);
+  var referenceClientRect = getBoundingClientRect(state.elements.reference);
   var popperOffsets = computeOffsets({
     reference: referenceClientRect,
     element: popperRect,
