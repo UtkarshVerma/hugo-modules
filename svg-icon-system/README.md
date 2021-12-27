@@ -53,6 +53,7 @@ Alternatively, you can use the `svg` shortcode in your content files.
 ```
 
 Each SVG is injected in the HTML source with two CSS classes, `icon` and another class which is just the filename of the injected SVG. For example the `fas fa-star` can be styled specifically using:
+
 ```css
 /* Recommended. Applies to all SVGs. */
 .icon {
