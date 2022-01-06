@@ -12,11 +12,15 @@ for (i = 0; i < files.length; i++) {
 function parseInlineMath(html) {
 	return html.replace(/\$(.*?)\$/g, function (outer, inner) {
 		return katex.renderToString(inner, { throwOnError: false })
+	}).replace(/\\\((.*?)\\\)/g, function(outer, innner) {
+		return katex.renderToString(inner, { throwOnError: false })
 	})
 }
 
 function parseMathBlocks(html) {
-	return html.replace(/\$\$(.*?)\$\$/gm, function (outer, inner) {
+	return html.replace(/\$\$(.*?)\$\$/g, function (outer, inner) {
+		return katex.renderToString(inner, { throwOnError: false, displayMode: true })
+	}).replace(/\\\[(.*?)\\\]/g, function(outer, innner) {
 		return katex.renderToString(inner, { throwOnError: false, displayMode: true })
 	})
 }
