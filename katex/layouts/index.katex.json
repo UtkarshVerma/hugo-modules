@@ -1,0 +1,5 @@
+{{- $index := slice -}}
+{{- range $page := where site.RegularPages "Params.math" true -}}
+  {{ $index = $index | append $page.Path }}
+{{- end -}}
+{{- $index | jsonify -}}

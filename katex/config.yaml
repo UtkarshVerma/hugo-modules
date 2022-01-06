@@ -1,0 +1,6 @@
+outputFormats:
+  KaTeX:
+    baseName: katex
+    isPlainText: true
+    mediaType: application/json
+    notAlternative: true

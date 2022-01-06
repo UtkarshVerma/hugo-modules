@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "katex": "^0.15.1",
+    "postcss-cli": "^9.1.0"
+  }
+}
