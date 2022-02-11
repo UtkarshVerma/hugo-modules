@@ -1,4 +1,4 @@
-{{ if and  . (not hugo.IsProduction) }}
+{{ if and . (not hugo.IsProduction) }}
 {{ $js := resources.Get "js/katex.js" | js.Build }}
 {{ with $js }}
 <script defer src="{{.RelPermalink}}"></script>
