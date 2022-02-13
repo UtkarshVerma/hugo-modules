@@ -1,0 +1,16 @@
+{{ $breakpoint := .breakpoint }}
+{{ $img := .img}}
+{{ $quality := .quality }}
+{{ $webpHint := .webpHint }}
+{{ $width := .width }}
+
+{{ if eq $width -1 }}{{ $width = $img.Width }}{{ end }}
+{{ if and (lt $width $img.Width) (ne $width -2) }}
+{{ with $img.Resize (printf "%dx webp q%d %s" $width $quality $webpHint) }}
+{{ $media := "" }}
+{{ with $breakpoint }}
+{{ $media = printf "(min-width:%dpx)" . }}
+{{ end }}
+<source {{$media|safeHTMLAttr}} srcset="{{.RelPermalink}}" type="image/webp" />
+{{ end }}
+{{ end }}

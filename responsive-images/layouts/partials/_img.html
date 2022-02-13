@@ -1,16 +1,40 @@
-{{ $breakpoint := .breakpoint }}
-{{ $img := .img}}
-{{ $quality := .quality }}
-{{ $webpHint := .webpHint }}
-{{ $width := .width }}
+{{ $img := .img }}
+{{ $alt := .alt | default "" }}
+{{ $class := .class | default "" }}
+{{ $loading := .loading | default "auto" }}
+{{ $webpHint := .webpHint | default "photo" }}
+{{ $breakpoints := .breakpoints | default (slice 768 992 1200) }}
+{{ $widths := .widths | default (slice 768 992 1200 -1) }}
+{{ $quality := .quality | default 75 }}
 
-{{ if eq $width -1 }}{{ $width = $img.Width }}{{ end }}
-{{ if and (lt $width $img.Width) (ne $width -2) }}
-{{ with $img.Resize (printf "%dx webp q%d %s" $width $quality $webpHint) }}
-{{ $media := "" }}
-{{ with $breakpoint }}
-{{ $media = printf "(min-width:%dpx)" . }}
+{{ $type := "" }}
+{{ with (substr (path.Ext $img) 1) }}
+{{ if in "jpg jpeg jfif pjpeg pjp" . }}
+{{ $type = "image/jpeg" }}
+{{ else}}
+{{ $type = print "image/" . }}
 {{ end }}
-<source {{$media|safeHTMLAttr}} srcset="{{.RelPermalink}}" type="image/webp" />
 {{ end }}
+
+{{ with $img }}
+<picture>
+    {{ range $i, $v := first (sub (len $breakpoints) 1) $breakpoints }}
+    {{ $width := index $widths (add $i 1) | default -1 }}
+    {{ $opts := dict "breakpoint" $v "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
+    {{ partialCached "__img" $opts $opts }}
+    {{ end }}
+
+    {{ $breakpoint := index (last 1 $breakpoints) 0 }}
+    {{ $width := index $widths (len $breakpoints) | default -1 }}
+    {{ $opts := dict "breakpoint" $breakpoint "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
+    {{ partialCached "__img" $opts $opts }}
+
+    {{ $width := index $widths 0 }}
+    {{ if lt .Width $width }}{{ $width = -1 }}{{ end }}
+    {{ $opts := dict "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
+    {{ partialCached "__img" $opts }}
+
+    <img class="{{$class}}" alt="{{$alt}}" src="{{.RelPermalink}}" height="{{.Height}}" width="{{.Width}}"
+        type="{{$type}}" loading="{{$loading}}" />
+</picture>
 {{ end }}
