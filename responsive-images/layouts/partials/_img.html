@@ -21,18 +21,18 @@
     {{ range $i, $v := first (sub (len $breakpoints) 1) $breakpoints }}
     {{ $width := index $widths (add $i 1) | default -1 }}
     {{ $opts := dict "breakpoint" $v "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partialCached "__img" $opts $opts }}
+    {{ partial "__img" $opts }}
     {{ end }}
 
     {{ $breakpoint := index (last 1 $breakpoints) 0 }}
     {{ $width := index $widths (len $breakpoints) | default -1 }}
     {{ $opts := dict "breakpoint" $breakpoint "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partialCached "__img" $opts $opts }}
+    {{ partial "__img" $opts }}
 
     {{ $width := index $widths 0 }}
     {{ if lt .Width $width }}{{ $width = -1 }}{{ end }}
     {{ $opts := dict "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partialCached "__img" $opts }}
+    {{ partial "__img" $opts }}
 
     <img class="{{$class}}" alt="{{$alt}}" src="{{.RelPermalink}}" height="{{.Height}}" width="{{.Width}}"
         type="{{$type}}" loading="{{$loading}}" />
