@@ -1,40 +1,32 @@
-{{ $img := .img }}
-{{ $alt := .alt | default "" }}
-{{ $class := .class | default "" }}
-{{ $loading := .loading | default "auto" }}
-{{ $webpHint := .webpHint | default "photo" }}
-{{ $breakpoints := .breakpoints | default (slice 768 992 1200) }}
-{{ $widths := .widths | default (slice 768 992 1200 -1) }}
-{{ $quality := .quality | default 75 }}
+{{ with .img }}
+    <picture>
+        {{ $opts := dict
+            "img" $.img
+            "quality" $.quality
+            "webpHint" $.webpHint
+        }}
 
-{{ $type := "" }}
-{{ with (substr (path.Ext $img) 1) }}
-{{ if in "jpg jpeg jfif pjpeg pjp" . }}
-{{ $type = "image/jpeg" }}
-{{ else}}
-{{ $type = print "image/" . }}
-{{ end }}
-{{ end }}
+        {{/* For each breakpoint, convert image to WebP and resize according to `$widths` */}}
+        {{ range $i, $v := $.breakpoints }}
+            {{ $width := index $.widths (add $i 1) | default -1 }}
+            {{ $opts = dict "breakpoint" $v "width" $width | merge $opts }}
+            {{ partialCached "__img" $opts $.img.Key $opts }}
+        {{ end }}
 
-{{ with $img }}
-<picture>
-    {{ range $i, $v := first (sub (len $breakpoints) 1) $breakpoints }}
-    {{ $width := index $widths (add $i 1) | default -1 }}
-    {{ $opts := dict "breakpoint" $v "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partial "__img" $opts }}
-    {{ end }}
+        {{/* Handle the smallest breakpoint */}}
+        {{ $width := index $.widths 0 }}
+        {{ $width = cond (lt $.img.Width $width) -1 $width }}
+        {{ $opts = dict "breakpoint" nil "width" $width | merge $opts }}
+        {{ partialCached "__img" $opts $.img.Key $opts }}
 
-    {{ $breakpoint := index (last 1 $breakpoints) 0 }}
-    {{ $width := index $widths (len $breakpoints) | default -1 }}
-    {{ $opts := dict "breakpoint" $breakpoint "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partial "__img" $opts }}
-
-    {{ $width := index $widths 0 }}
-    {{ if lt .Width $width }}{{ $width = -1 }}{{ end }}
-    {{ $opts := dict "width" $width "img" $img "webpHint" $webpHint "quality" $quality }}
-    {{ partial "__img" $opts }}
-
-    <img class="{{$class}}" alt="{{$alt}}" src="{{.RelPermalink}}" height="{{.Height}}" width="{{.Width}}"
-        type="{{$type}}" loading="{{$loading}}" />
-</picture>
+        {{/* Original, unresized image as fallback */}}
+        {{ $attributes := "" }}
+        {{ range $i, $v := slice "class" "alt" "loading" }}
+            {{ with index $ . }}
+                {{ $attributes = printf `%s %s="%s"` $attributes $v . }}
+            {{ end }}
+        {{ end }}
+        <img src="{{.RelPermalink}}" height="{{.Height}}" width="{{.Width}}"
+            type="{{.MediaType}}" {{$attributes|safeHTMLAttr}} />
+    </picture>
 {{ end }}
