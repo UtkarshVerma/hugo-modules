@@ -1,5 +1,10 @@
+{{ $icon := cond .IsNamedParams (.Get "icon") (.Get 0) }}
+{{ with .Page.Resources.GetMatch $icon }}
+    {{ $icon = . }}
+{{ end }}
+
 {{ if .IsNamedParams }}
-    {{ partial "svg" (dict "icon" (.Get "icon") "title" (.Get "title")) }}
+    {{ partial "svg" (dict "icon" $icon "title" (.Get "title")) }}
 {{ else }}
-    {{ partial "svg" (.Get 0) }}
+    {{ partial "svg" $icon }}
 {{ end }}

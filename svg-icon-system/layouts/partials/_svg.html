@@ -8,22 +8,28 @@
 {{ end }}
 
 {{ $class := "" }}
-{{ $returnVal := "" }}
-{{ $icon := resources.Get $svg }}
-{{ if ne $icon nil }}
-    {{ $class = print (replace (path.Base $svg) ".svg" "" | anchorize) " icon" }}
-    {{ $returnVal = $icon.Content }}
-{{ else }}
+{{ $file := "" }}
+{{ if eq (printf "%T" $svg) "*resources.resourceAdapter" }}
+    {{ $file = $svg }}
+{{ else if eq (printf "%T" $svg) "string" }}
     {{ $family := index (findRE "(fas|fab|far)" $svg) 0 }}
     {{ $family = cond (eq $family "fas") "solid" (cond (eq $family "far") "regular" "brands") }}
     {{ $icon := substr $svg (len "fas fa-") }}
 
     {{ $class = print $icon " icon" }}
     {{ $path := printf "svgs/fontawesome/%s/%s.svg" $family $icon }}
-    {{ $file := resources.Get $path  }}
-    {{ $returnVal = replaceRE "<!--[\\s\\S]*-->" "" $file.Content }}
+    {{ $file = resources.Get $path }}
+{{ else }}
+    {{ $class = print (replace (path.Base $svg) ".svg" "" | anchorize) " icon" }}
+    {{ $file = resources.Get $svg }}
 {{ end }}
 
+{{ if eq $file nil }}
+    {{ warnf "Icon not found: %s" $svg }}
+    {{ return }}
+{{ end }}
+
+{{ $content := replaceRE "<!--[\\s\\S]*-->" "" $file.Content }}
 {{ $pattern := `[\s\S]*?<svg([\s\S]*)?>([\s\S]*)(<title>[\s\S]*</title>)?([\s\S]*)</svg>([\s\S]*)?` }}
 {{ $replaceWith := "" }}
 {{ with $title }}
@@ -31,6 +37,4 @@
 {{ else }}
     {{ $replaceWith = printf `<svg class="%s" ${1}>${2}${3}${4}</svg>` $class }}
 {{ end }}
-
-{{ $returnVal = $returnVal | replaceRE $pattern $replaceWith | safeHTML }}
-{{ return $returnVal }}
+{{ return ($content | replaceRE $pattern $replaceWith | safeHTML) }}
