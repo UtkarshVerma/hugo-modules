@@ -1,1 +1,0 @@
-# github.com/popperjs/popper-core v2.10.2+incompatible

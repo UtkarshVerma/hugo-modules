@@ -12,9 +12,4 @@ module:
           target: assets/bootstrap
         - source: js/index.esm.js
           target: assets/bootstrap/index.js
-    - path: github.com/popperjs/popper-core
-      mounts:
-        - source: lib
-          target: assets/@popperjs/core/lib
-        - source: index.d.ts
-          target: assets/@popperjs/core/index.ts
+    - path: github.com/gohugoio/hugo-mod-jslibs-dist/popperjs/v2
