@@ -13,15 +13,12 @@ While this approach of inlining SVGs is definitely not something new, people hav
 
 
 # Usage
-To use this module, you'll have to download it first.
+To use this module, you'll have to initialize Hugo Modules in your project first.
 ```sh
-# Optional. Do this if you haven't already done this.
 hugo mod init "<your website/theme repo>"
-
-hugo mod get github.com/UtkarshVerma/hugo-modules/svg-icon-system
 ```
 
-Once done, add the module to your theme/website's `config.yaml`.
+After that, add the module to your project's `config.yaml`.
 ```yaml
 module:
   imports:
@@ -38,6 +35,9 @@ Once that's done, you can go ahead and insert SVGs anywhere in your website usin
 
 {{% Specifying a custom title for the SVG. %}}
 {{ partial "svg" (dict "icon" "fas fa-star" "title" "Hoshi") }}
+
+{{% Specifying attributes for the SVG. They can be anything. %}}
+{{ partial "svg" (dict "icon" "fas fa-star" "fill" "red" "height" "10em" "class" "myClass") }}
 ```
 
 Alternatively, you can use the `svg` shortcode in your content files.
@@ -50,6 +50,12 @@ Alternatively, you can use the `svg` shortcode in your content files.
 
 <!-- Specifying a custom title for the SVG. -->
 {{< svg icon="fas fa-star" title="Hoshi" >}}
+
+<!-- Specifying attributes for the SVG. They can be anything. -->
+{{< svg icon="fas fa-star" fill="red" height="10em" class="myClass") }}
+
+<!-- Inject 'flowchart.svg' from the page resources -->
+{{< svg icon="flowchart.svg" title="My program's algorithm" >}}
 ```
 
 Each SVG is injected in the HTML source with two CSS classes, `icon` and another class which is just the filename of the injected SVG. For example the `fas fa-star` can be styled specifically using:

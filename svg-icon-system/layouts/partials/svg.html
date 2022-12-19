@@ -1,1 +1,6 @@
-{{ return (partialCached "_svg" . .) }}
+{{ $args := dict "icon" . }}
+{{ if reflect.IsMap . }}
+    {{ $args = . }}
+{{ end }}
+
+{{ return partialCached "_svg" $args $args }}

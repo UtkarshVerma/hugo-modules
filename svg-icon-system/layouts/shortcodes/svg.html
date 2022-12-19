@@ -1,10 +1,15 @@
-{{ $icon := cond .IsNamedParams (.Get "icon") (.Get 0) }}
-{{ with .Page.Resources.GetMatch $icon }}
-    {{ $icon = . }}
-{{ end }}
+{{- $icon := cond .IsNamedParams (.Get "icon") (.Get 0) -}}
+{{- $icon = strings.TrimSuffix ".svg" $icon -}}
 
-{{ if .IsNamedParams }}
-    {{ partial "svg" (dict "icon" $icon "title" (.Get "title")) }}
-{{ else }}
-    {{ partial "svg" $icon }}
-{{ end }}
+{{- with .Page.Resources.GetMatch (printf "%s.*" $icon) -}}
+    {{- $icon = . -}}
+{{- end -}}
+
+{{- if .IsNamedParams -}}
+    {{- $s := newScratch -}}
+    {{- range $k, $v := .Params -}}{{- $s.Set $k $v -}}{{- end -}}
+    {{- $s.Set "icon" $icon -}}
+    {{- partial "svg" $s.Values -}}
+{{- else -}}
+    {{- partial "svg" $icon -}}
+{{- end -}}
