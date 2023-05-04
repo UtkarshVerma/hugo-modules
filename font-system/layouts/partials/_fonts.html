@@ -1,0 +1,39 @@
+{{ $css := "" }}
+
+{{ range . }}
+  {{ $files := slice }}
+  {{ range .files }}
+    {{ $format := trim (path.Ext .) "." }}
+    {{ if eq $format "ttf" }}
+      {{ $format = "truetype" }}
+    {{ end }}
+
+    {{ $font := "" }}
+    {{ if (urls.Parse .).IsAbs }}
+      {{ $font = resources.GetRemote . }}
+    {{ else }}
+      {{ $font = resources.Get . }}
+    {{ end }}
+    {{ with $font }}
+      {{ $files = $files | append (dict "format" $format "url" .RelPermalink) }}
+    {{ end }}
+  {{ end }}
+  {{ $srcs := slice }}
+  {{ range sort $files ".format" "desc" }}
+    {{ $srcs = $srcs | append (printf "url('%s') format('%s')" .url .format) }}
+  {{ end }}
+
+
+  <!-- prettier-ignore -->
+  {{ $css = printf `%s
+@font-face {
+  font-family: %s;
+  src: local('%s'), %s;
+  font-weight: %v;
+  font-style: %v;
+  font-display: swap;
+}` $css .name .name (delimit $srcs ", ") (.weight | default "normal") (.style | default "normal") }}
+{{ end }}
+
+{{ $targetPath := printf "%d.scss" now.UnixNano }}
+{{ return resources.FromString $targetPath $css }}
