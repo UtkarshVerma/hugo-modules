@@ -2,10 +2,12 @@
   "comments": {
     "dependencies": {},
     "devDependencies": {
+      "@types/katex": "project",
       "katex": "project",
       "postcss-cli": "project"
     }
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/katex": "^0.16.0",
     "katex": "^0.16.7",

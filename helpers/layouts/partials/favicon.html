@@ -1,0 +1,9 @@
+{{ $image := . }}
+{{ if eq (print "%T" .) "string" }}
+  {{ $image = resources.Get . }}
+  {{ if eq $image nil }}
+    {{ warnf "favicon not found: %s" . }}
+  {{ end }}
+{{ end }}
+
+{{ return partialCached "_favicon" $image $image.Key }}

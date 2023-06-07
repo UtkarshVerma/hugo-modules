@@ -1,0 +1,19 @@
+{{ with . }}
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="{{ (.Resize (printf `180x`)).RelPermalink }}"
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="{{ (.Resize (printf `32x`)).RelPermalink }}"
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="16x16"
+    href="{{ (.Resize (printf `16x`)).RelPermalink }}"
+  />
+{{ end }}
