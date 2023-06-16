@@ -1,22 +1,27 @@
 {{ if . }}
-{{ $css := readFile "/node_modules/katex/dist/katex.min.css" | replaceRE "fonts/(.*?)\\)" "/fonts/katex/$1)" | resources.FromString "css/katex.css" }}
-{{ with $css }}
-{{ if hugo.IsProduction }}
-{{ with . | minify | fingerprint }}
-<link rel="stylesheet" href="{{.RelPermalink}}" integrity="{{.Data.Integrity}}" crossorigin="anonymous">
-{{ end }}
-{{ else }}
-<link rel="stylesheet" href="{{.RelPermalink}}">
-{{ end }}
-{{ end }}
+  {{ $css := readFile "/node_modules/katex/dist/katex.min.css" | replaceRE "fonts/(.*?)\\)" "/fonts/katex/$1)" | resources.FromString "css/katex.css" }}
+  {{ with $css }}
+    {{ if hugo.IsProduction }}
+      {{ with . | minify | fingerprint }}
+        <link
+          rel="stylesheet"
+          href="{{ .RelPermalink }}"
+          integrity="{{ .Data.Integrity }}"
+          crossorigin="anonymous"
+        />
+      {{ end }}
+    {{ else }}
+      <link rel="stylesheet" href="{{ .RelPermalink }}" />
+    {{ end }}
+  {{ end }}
 
-{{/* Copy all fonts from KaTeX's npm module */}}
-{{ $dir := "/node_modules/katex/dist/fonts" }}
-{{ $fonts := slice }}
-{{ range (readDir $dir) }}
+  {{/* Copy all fonts from KaTeX's npm module */}}
+  {{ $dir := "/node_modules/katex/dist/fonts" }}
+  {{ $fonts := slice }}
+  {{ range (readDir $dir) }}
     {{ $source := path.Join $dir .Name }}
     {{ $dest := path.Join "fonts/katex" .Name }}
     {{ $font := readFile $source | resources.FromString $dest }}
     {{ $fonts = $fonts | append $font.RelPermalink }}
-{{ end }}
+  {{ end }}
 {{ end }}

@@ -1,5 +1,9 @@
-{{- $index := slice -}}
+{{- $pages := slice -}}
 {{- range where site.RegularPages "Params.math" true -}}
-  {{ $index = $index | append .File.Path }}
+  {{- with $outputFormat := .OutputFormats.Get "html" -}}
+      {{- $fileName := print .Format.BaseName .Format.MediaType.FirstSuffix.FullSuffix -}}
+      {{- $path := path.Join .RelPermalink $fileName -}}
+      {{- $pages = $pages | append $path -}}
+  {{- end -}}
 {{- end -}}
-{{- $index | jsonify -}}
+{{- $pages | jsonify -}}
