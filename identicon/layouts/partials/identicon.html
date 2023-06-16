@@ -1,0 +1,6 @@
+{{- $args := dict "seed" . "size" 5 -}}
+{{- if reflect.IsMap . -}}
+  {{- $args = merge $args . -}}
+{{- end -}}
+
+{{- return (partialCached "identicon/main" $args $args) -}}

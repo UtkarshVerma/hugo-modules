@@ -1,0 +1,9 @@
+{{- $components := slice -}}
+{{- $nibbles := last 6 $.nibbles -}}
+{{- range seq 0 2 -}}
+  {{- $component := $nibbles | after (mul 2 .) | first 2 -}}
+  {{- $component = math.Pow 2 4 | mul (index $component 1) | add (index $component 0) -}}
+  {{- $components = $components | append $component -}}
+{{- end -}}
+
+{{- return printf "rgb(%s)" (delimit $components ", ") -}}

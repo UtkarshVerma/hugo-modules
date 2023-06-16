@@ -1,0 +1,37 @@
+{{- $count := 1 -}}
+{{- $d := slice -}}
+
+{{/* Convert pixels into lines and horizontal movements */}}
+{{- range $i, $v := .pixels -}}
+  {{- $next := index $.pixels (add $i 1) -}}
+
+  {{- if eq $v $next -}}
+    {{- $count = $count | add 1 -}}
+  {{- else -}}
+    {{- $d = $d | append (printf (cond (eq $v 1) "h%d" "m%d 0") $count) -}}
+    {{- $count = 1 -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Move the pen to the beginning of first line */}}
+{{- if $d -}}
+  {{- $first := index $d 0 -}}
+  {{- $offset := 0 -}}
+
+  {{/* Merge the first relative move command with the absolute move command */}}
+  {{- if hasPrefix $first "m" -}}
+    {{- $offset = index (first 1 (split (substr $first 1) " ")) 0 | int -}}
+    {{- $d = after 1 $d -}}
+  {{- end -}}
+
+  {{/* Row index needs to be offset because strokes are positioned relative to their mid-point and not edges */}}
+  {{- $d = slice (printf "M%d %.1f" $offset (.rowIndex | add 0.5)) | append $d -}}
+{{- end -}}
+
+{{/* Last move command is useless, so remove it */}}
+{{- $length := len $d -}}
+{{- if hasPrefix (index $d (sub $length 1)) "m" -}}
+  {{- $d = first (sub $length 1) $d -}}
+{{- end -}}
+
+{{- return (delimit $d "") -}}

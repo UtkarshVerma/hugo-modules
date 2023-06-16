@@ -1,0 +1,27 @@
+{{- $s := newScratch -}}
+{{- $s.Set "pixels" dict -}}
+
+{{/* Identicons are vertically symmetric */}}
+{{- $hashIndex := 0 -}}
+{{- range $i := seq 0 (sub $.size 1) -}}
+  {{- range $j := seq  0 (div (sub $.size 1) 2 | math.Floor) -}}
+    {{- $index := mul $.size $i | add $j -}}
+    {{- $mirrorIndex := mul $.size $i | add (sub $.size 1 $j) -}}
+
+    {{- range slice $index $mirrorIndex -}}
+      {{- $s.SetInMap "pixels" (string .) (modBool (index $.nibbles $hashIndex) 2 | int) -}}
+    {{- end -}}
+
+    {{- $hashIndex = add $hashIndex 1 -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $p := $s.Get "pixels" -}}
+{{- $pixels := slice -}}
+{{- range $i := seq 0 (sub $.size 1) -}}
+  {{- range $j := seq 0 (sub $.size 1) -}}
+    {{- $pixels = $pixels | append (index $p (string (mul $i $.size | add $j))) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $pixels -}}

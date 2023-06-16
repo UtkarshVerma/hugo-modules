@@ -1,0 +1,24 @@
+{{/* For an md5 hash, size should be no more than 8 */}}
+{{- $hash := md5 .seed -}}
+{{- $size := .size -}}
+
+{{- $nibbles := slice -}}
+{{- range split $hash "" -}}
+  {{- $nibbles = $nibbles | append (int (printf "0x%s" .)) -}}
+{{- end -}}
+
+{{- $opts := dict "nibbles" $nibbles "size" $size -}}
+{{- $pixels := partialCached "identicon/pixels" $opts $opts -}}
+{{ $color := partialCached "identicon/color" $opts $opts }}
+
+{{- $opts := dict "pixels" $pixels "size" $size -}}
+{{- with partialCached "identicon/path" $opts $opts -}}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    version="1.1"
+    viewbox="0 0 {{ $size }} {{ $size }}"
+    color="{{ $color }}"
+  >
+    {{- . -}}
+  </svg>
+{{- end -}}

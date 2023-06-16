@@ -1,0 +1,13 @@
+{{- $d := slice -}}
+{{- range $i := seq 0 (sub .size 1) -}}
+  {{- $offset := mul $.size . -}}
+  {{- $rowPixels := first $.size (after $offset $.pixels) -}}
+  {{- $d = $d | append (partial "identicon/row-path" (dict "pixels" $rowPixels "rowIndex" .)) -}}
+{{- end -}}
+
+{{- $path := "" -}}
+{{- if len $d -}}
+  {{- $path = printf `<path stroke="currentColor" d="%s"/>` (delimit $d "") | safeHTML -}}
+{{- end -}}
+
+{{- return $path -}}
