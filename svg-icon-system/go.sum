@@ -1,2 +1,4 @@
-github.com/FortAwesome/Font-Awesome v0.0.0-20221115183454-96cafbd73ec4 h1:xfr9SidRCMEh4A8fdkLhFPcHAVbrdv3Ua0Jp/nSmhhQ=
-github.com/FortAwesome/Font-Awesome v0.0.0-20221115183454-96cafbd73ec4/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
+github.com/FortAwesome/Font-Awesome v0.0.0-20230327165841-0698449d50f2 h1:Uv1z5EqCfmiK4IHUwT0m3h/u/WCk+kpRfxvAZhpC7Gc=
+github.com/FortAwesome/Font-Awesome v0.0.0-20230327165841-0698449d50f2/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
+github.com/twbs/icons v1.10.5 h1:F9uvW7cGfDBAautw5aeCmnB3hw4vv3aEQGbHnzcQKaE=
+github.com/twbs/icons v1.10.5/go.mod h1:GnRlymgVWp5iVJCMa0Me5b6tFyGpVc2bSxPMRGIJmyA=

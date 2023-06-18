@@ -4,3 +4,7 @@ module:
       mounts:
         - source: svgs
           target: assets/svgs/fontawesome
+    - path: github.com/twbs/icons
+      mounts:
+        - source: icons
+          target: assets/svgs/bootstrap
