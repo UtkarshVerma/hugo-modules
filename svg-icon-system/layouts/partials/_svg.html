@@ -2,13 +2,11 @@
 {{- $svg := .icon -}}
 {{- $iconIsString := eq (printf "%T" .icon) "string" -}}
 
-{{- $classes := slice "icon" -}}
 {{- if $iconIsString -}}
   {{- $path := strings.TrimSuffix ".svg" .icon -}}
 
   {{- with resources.Get (printf "%s.svg" $path) -}}
     {{- $svg = . -}}
-    {{- $classes = $classes | append (path.Base $path) -}}
   {{- else -}}
     {{- /* If icon doesn't exist in the site, fallback to icon packs */}}
     {{- if hasPrefix .icon "fa-" -}}
@@ -26,6 +24,8 @@
     {{- $svg = resources.Get $path -}}
   {{- end -}}
 {{- end -}}
+
+{{- $classes := slice (path.BaseName $svg) "icon" -}}
 
 {{- $markup := "" -}}
 {{- with $svg -}}
