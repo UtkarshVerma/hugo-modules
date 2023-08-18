@@ -3,4 +3,4 @@
   {{- $args = . -}}
 {{- end -}}
 
-{{- return partialCached "_svg" $args $args -}}
+{{- return partialCached "_svg" $args $args.icon $args -}}
